@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Controller
-public class MainPage {
+public class MainController {
 
     @RequestMapping("/")
     public String index(){
-        return "Index Page";
+        return "index";
     }
 
     // request -> WEB -> SERVER
@@ -41,4 +41,5 @@ public class MainPage {
         printWriter.write(msg);
         printWriter.close();
     }
+
 }
