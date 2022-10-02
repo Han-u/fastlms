@@ -1,4 +1,4 @@
-package com.zb.fastlms.member;
+package com.zb.fastlms.member.model;
 
 import lombok.Data;
 import lombok.ToString;
