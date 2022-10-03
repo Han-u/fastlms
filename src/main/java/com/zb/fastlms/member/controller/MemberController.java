@@ -6,6 +6,7 @@ import com.zb.fastlms.member.repository.MemberRepository;
 import com.zb.fastlms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,10 +25,10 @@ public class MemberController {
     }
 
     @RequestMapping(value = "/member/register", method = RequestMethod.POST)
-    public String registerSubmit(HttpServletRequest request, HttpServletResponse response, MemberInput parameter){
+    public String registerSubmit(Model model, HttpServletRequest request, MemberInput parameter){
 
         boolean result = memberService.register(parameter);
-
+        model.addAttribute("result", result);
         return "member/register_complete";
     }
 }
