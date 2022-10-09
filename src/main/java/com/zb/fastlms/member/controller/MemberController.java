@@ -1,6 +1,7 @@
 package com.zb.fastlms.member.controller;
 
 import com.zb.fastlms.member.model.MemberInput;
+import com.zb.fastlms.member.model.ResetPasswordInput;
 import com.zb.fastlms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,17 +19,37 @@ public class MemberController {
     private final MemberService memberService;
 
     @RequestMapping(value = "/member/login")
-    public String login(){
+    public String login() {
         return "member/login";
     }
 
+    @GetMapping("/member/find/password")
+    public String findPassword() {
+        return "member/find_password";
+    }
+
+    @PostMapping("/member/find/password")
+    public String findPasswordSubmit(Model model, ResetPasswordInput parameter) {
+        boolean result = false;
+
+        try {
+            result = memberService.sendResetPassword(parameter);
+        } catch (Exception e) {
+        }
+
+
+        model.addAttribute("result", result);
+
+        return "member/find_password_result";
+    }
+
     @GetMapping(value = "/member/register")
-    public String register(){
+    public String register() {
         return "member/register";
     }
 
     @PostMapping(value = "/member/register")
-    public String registerSubmit(Model model, HttpServletRequest request, MemberInput parameter){
+    public String registerSubmit(Model model, HttpServletRequest request, MemberInput parameter) {
         System.out.println(request);
         boolean result = memberService.register(parameter);
         model.addAttribute("result", result);
@@ -36,7 +57,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/email-auth")
-    public String emailAuth(Model model, HttpServletRequest request){
+    public String emailAuth(Model model, HttpServletRequest request) {
         String uuid = request.getParameter("id");
         boolean result = memberService.emailAuth(uuid);
         model.addAttribute("result", result);
@@ -44,8 +65,29 @@ public class MemberController {
     }
 
     @GetMapping("/member/info")
-    public String memberInfo(){
+    public String memberInfo() {
         return "member/info";
+    }
+
+    @GetMapping("/member/reset/password")
+    public String resetPassword(Model model, HttpServletRequest request) {
+        String uuid = request.getParameter("id");
+        model.addAttribute("uuid", uuid);
+
+        boolean result = memberService.checkResetPassword(uuid);
+        model.addAttribute("result", result);
+        return "member/reset_password";
+    }
+
+    @PostMapping("/member/reset/password")
+    public String resetPasswordSubmit(Model model, ResetPasswordInput parameter) {
+        boolean result = false;
+        try {
+            memberService.resetPassword(parameter.getId(), parameter.getPassword());
+        } catch (Exception e){}
+
+        model.addAttribute("result", result);
+        return "member/reset_password_result";
     }
 
 }
