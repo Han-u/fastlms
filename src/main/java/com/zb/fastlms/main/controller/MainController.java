@@ -1,4 +1,4 @@
-package com.zb.fastlms;
+package com.zb.fastlms.main.controller;
 
 // 목적: 주소와 물리적인 파일 매핑하기 위해서
 

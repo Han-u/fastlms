@@ -6,9 +6,17 @@ import com.zb.fastlms.member.model.MemberInput;
 import com.zb.fastlms.member.repository.MemberRepository;
 import com.zb.fastlms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         String uuid = UUID.randomUUID().toString();
-
+        System.out.println(parameter);
         Member member = Member.builder()
                         .userId(parameter.getUserId())
                         .userName(parameter.getUserName())
@@ -39,7 +47,7 @@ public class MemberServiceImpl implements MemberService {
                         .emailAuthKey(uuid)
                         .build();
         memberRepository.save(member);
-
+        System.out.println("Done");
         String email = parameter.getUserId();
         String subject = "사이트 가입 ㅊㅋㅊㅋㅋ";
         String text=  "<p>사이트 가입 축하</p> <p>링크클릭 앤 가입완료</p>"+"<div><a href='http://localhost:8080/member/email-auth?id=" + uuid+"'>가입완료하기</a></div>";
@@ -61,5 +69,20 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
 
         return true;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Member> optionalMember = memberRepository.findById(username);
+        if (!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원정보가 전재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
     }
 }

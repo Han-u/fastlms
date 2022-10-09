@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @GetMapping(value = "/member/login")
+    public String login(){
+        return "member/login";
+    }
+
     @GetMapping(value = "/member/register")
     public String register(){
         return "member/register";
@@ -22,7 +28,7 @@ public class MemberController {
 
     @PostMapping(value = "/member/register")
     public String registerSubmit(Model model, HttpServletRequest request, MemberInput parameter){
-
+        System.out.println(request);
         boolean result = memberService.register(parameter);
         model.addAttribute("result", result);
         return "member/register_complete";
@@ -34,6 +40,11 @@ public class MemberController {
         boolean result = memberService.emailAuth(uuid);
         model.addAttribute("result", result);
         return "member/email_auth";
+    }
+
+    @GetMapping("/member/info")
+    public String memberInfo(){
+        return "member/info";
     }
 
 }
