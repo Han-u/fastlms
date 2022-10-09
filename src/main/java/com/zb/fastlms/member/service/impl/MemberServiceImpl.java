@@ -2,6 +2,7 @@ package com.zb.fastlms.member.service.impl;
 
 import com.zb.fastlms.components.MailComponents;
 import com.zb.fastlms.member.entity.Member;
+import com.zb.fastlms.member.exception.MemberNotEmailAuthException;
 import com.zb.fastlms.member.model.MemberInput;
 import com.zb.fastlms.member.repository.MemberRepository;
 import com.zb.fastlms.member.service.MemberService;
@@ -11,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -35,13 +37,15 @@ public class MemberServiceImpl implements MemberService {
             return false;
         }
 
+        String encPassword = BCrypt.hashpw(parameter.getPassword(), BCrypt.gensalt());
+
         String uuid = UUID.randomUUID().toString();
         System.out.println(parameter);
         Member member = Member.builder()
                         .userId(parameter.getUserId())
                         .userName(parameter.getUserName())
                         .phone(parameter.getPhone())
-                        .password(parameter.getPassword())
+                        .password(encPassword)
                         .regDt(LocalDateTime.now())
                         .emailAuthYn(false)
                         .emailAuthKey(uuid)
@@ -79,6 +83,10 @@ public class MemberServiceImpl implements MemberService {
         }
 
         Member member = optionalMember.get();
+
+        if (!member.isEmailAuthYn()){
+            throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해주세요");
+        }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));

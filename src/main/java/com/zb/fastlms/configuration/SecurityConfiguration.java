@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -20,7 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final MemberService memberService;
 
     @Bean
-    PasswordEncoder getPasswordEncoder(){
+    PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -30,7 +31,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http)throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http.csrf().disable();
+
         http.authorizeRequests()
                 .antMatchers("/", "/member/register", "/member/email-auth")
                 .permitAll();
@@ -38,6 +42,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage("/member/login")
                 .failureHandler(getFailureHandler())
                 .permitAll();
+        http.logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true);
         super.configure(http);
     }
 
