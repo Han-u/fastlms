@@ -1,5 +1,7 @@
 package com.zb.fastlms.member.service.impl;
 
+import com.zb.fastlms.admin.dto.MemberDto;
+import com.zb.fastlms.admin.mapper.MemberMapper;
 import com.zb.fastlms.components.MailComponents;
 import com.zb.fastlms.member.entity.Member;
 import com.zb.fastlms.member.exception.MemberNotEmailAuthException;
@@ -29,6 +31,8 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MailComponents mailComponents;
+
+    private final MemberMapper memberMapper;
 
     @Override
     public boolean register(MemberInput parameter) {
@@ -155,6 +159,14 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return true;
+    }
+
+    @Override
+    public List<MemberDto> list() {
+
+        MemberDto parameter = new MemberDto();
+        List<MemberDto> list = memberMapper.selectList(parameter);
+        return list;
     }
 
     @Override
