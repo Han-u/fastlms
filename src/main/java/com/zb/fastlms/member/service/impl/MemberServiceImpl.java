@@ -2,6 +2,7 @@ package com.zb.fastlms.member.service.impl;
 
 import com.zb.fastlms.admin.dto.MemberDto;
 import com.zb.fastlms.admin.mapper.MemberMapper;
+import com.zb.fastlms.admin.model.MemberParam;
 import com.zb.fastlms.components.MailComponents;
 import com.zb.fastlms.member.entity.Member;
 import com.zb.fastlms.member.exception.MemberNotEmailAuthException;
@@ -162,9 +163,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberDto> list() {
+    public List<MemberDto> list(MemberParam parameter) {
 
-        MemberDto parameter = new MemberDto();
         List<MemberDto> list = memberMapper.selectList(parameter);
         return list;
     }

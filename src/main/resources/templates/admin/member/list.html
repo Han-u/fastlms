@@ -11,6 +11,11 @@
         .list table th, .list table td {
             border: solid 1px #000;
         }
+        .search-form {
+            padding: 5px 0 10px;
+            text-align: right;
+        }
+
     </style>
 </head>
 <body>
@@ -26,39 +31,56 @@
     |
     <a href="/member/logout">로그아웃</a>
     <br/>
+    <hr/>
 </div>
 
 <div class="list">
+
+    <div>
+        <div class="search-form">
+            <form method="get">
+                <select name="searchType">
+                    <option value="all">전체</option>
+                    <option th:selected="${#strings.equals(param.searchType, 'userId')}" value="userId">아이디</option>
+                    <option th:selected="${#strings.equals(param.searchType, 'userName')}" value="userName">이름</option>
+                    <option th:selected="${#strings.equals(param.searchType, 'phone')}" value="phone">연락처</option>
+                </select>
+                <input th:value="${param.searchValue}" type="search" name="searchValue"/>
+                <button type="submit">검색</button>
+            </form>
+        </div>
+    </div>
+
     <table>
         <thead>
-            <tr>
-                <th>No/</th>
-                <th>아이디(이메일)</th>
-                <th>이름</th>
-                <th>연락처</th>
-                <th>이메일 인증 여부</th>
-                <th>가입일</th>
-                <th>관리자여부</th>
-            </tr>
+        <tr>
+            <th>No/</th>
+            <th>아이디(이메일)</th>
+            <th>이름</th>
+            <th>연락처</th>
+            <th>이메일 인증 여부</th>
+            <th>가입일</th>
+            <th>관리자여부</th>
+        </tr>
         </thead>
         <tbody>
-            <tr th:each="x: ${list}">
-                <td>1</td>
-                <td th:text="${x.userId}"></td>
-                <td th:text="${x.userName}"></td>
-                <td th:text="${x.phone}"></td>
-                <td>
-                    <p th:if="${x.emailAuthYn}">Y</p>
-                    <p th:if="${x.emailAuthYn eq false}">N</p>
-                </td>
-                <td>
-                    <p th:text="${x.regDt}"></p>
-                </td>
-                <td>
-                    <p th:if="${x.adminYn}">Y</p>
-                    <p th:if="${x.adminYn eq false}">N</p>
-                </td>
-            </tr>
+        <tr th:each="x: ${list}">
+            <td>1</td>
+            <td th:text="${x.userId}"></td>
+            <td th:text="${x.userName}"></td>
+            <td th:text="${x.phone}"></td>
+            <td>
+                <p th:if="${x.emailAuthYn}">Y</p>
+                <p th:if="${x.emailAuthYn eq false}">N</p>
+            </td>
+            <td>
+                <p th:text="${x.regDt}"></p>
+            </td>
+            <td>
+                <p th:if="${x.adminYn}">Y</p>
+                <p th:if="${x.adminYn eq false}">N</p>
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>
