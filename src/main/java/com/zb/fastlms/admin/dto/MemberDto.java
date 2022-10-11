@@ -19,4 +19,7 @@ public class MemberDto {
     String resetPasswordKey;
     LocalDateTime resetPasswordLimitDt;
     boolean adminYn;
+
+    long totalCount;
+    long seq;
 }
