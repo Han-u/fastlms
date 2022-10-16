@@ -12,7 +12,7 @@ public class PageUtil {
     /**
      * 페이지 블럭 개수
      */
-    private long pageBlockSize;
+    private long pageBlockSize = 10;
     /**
      * 현재 페이지 번호
      */

@@ -7,6 +7,8 @@ public class MemberParam {
     long pageIndex;
     long pageSize;
 
+    String userId;
+
     String searchType;
     String searchValue;
 
