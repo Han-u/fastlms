@@ -1,4 +1,4 @@
-package com.zb.fastlms.admin;
+package com.zb.fastlms.admin.controller;
 
 import com.zb.fastlms.admin.dto.MemberDto;
 import com.zb.fastlms.admin.model.MemberInput;
